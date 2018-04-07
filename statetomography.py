@@ -17,12 +17,13 @@ def state_tomography(Program, NumSamples, qubits, QVMorQPU):
     if(QVMorQPU == 1):
         state_tomography_qpu, _, _ = do_state_tomography(Program, NumSamples, qpu, qubits)
     state_tomography_qvm.plot();
+    plt.show()
 
 
 prog = Program(H(0))
 print(prog)
 
-state_tomography(prog,2,[0],0)
+state_tomography(prog,20,[0],0)
 
 
 
