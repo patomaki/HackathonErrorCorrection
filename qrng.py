@@ -1,4 +1,5 @@
 # S. Patomaki, April 2018 Quantum Hackathon for rigetti
+# A. Owens (helper functions for repetition code)
 import time
 import datetime
 import numpy as np
