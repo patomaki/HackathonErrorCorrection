@@ -74,7 +74,6 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
     plt.show()
     
 """
-prog= Program([CNOT(0,7)])
-state_tomography(prog,10000,[0],1)
-state_tomography(prog,10000,[7],1)
-"""
+prog= Program([H(5),X(5),H(5),Z(5),H(5)])
+#state_tomography(prog,500,[0,12],1)
+process_tomography(prog,2000,[5],1)"""
