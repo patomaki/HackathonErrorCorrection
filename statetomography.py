@@ -9,20 +9,21 @@ from grove.tomography.state_tomography import do_state_tomography
 from grove.tomography.process_tomography import do_process_tomography
 from grove.tomography.utils import notebook_mode
 import matplotlib.pyplot as plt
+import grove.tomography.utils as ut
+
 
 """
 qvm = QVMConnection()
-
 acorn = get_devices(as_dict=True)['19Q-Acorn']
-qvm = QVMConnection(acorn)  #QVM with QPU noise
+qpu = QVMConnection(acorn)  #QVM with QPU noise
+#qpu = QPUConnection(acorn)
 """
-
 
 def state_tomography(Program, NumSamples, qubits, QVMorQPU):
     """Inputs:
                 Program = The program/circuit 
                 NumSamples = Number of Samples in tomography
-                qubits = qubit(s) to perform tomgraphy on
+                qubits = qubit(s) to perform tomgraphy on, as a list
                 QVMorQPU = 0 or 1 to decide which device to run on
         Outputs:
                 Array and graph showing the tomography
@@ -37,10 +38,12 @@ def state_tomography(Program, NumSamples, qubits, QVMorQPU):
     if(QVMorQPU == 1):
         state_tomography_qpu, _, _ = do_state_tomography(
                 Program, NumSamples, qpu, qubits)
+        state_tomography_qvm, _, _ = do_state_tomography(
+                Program, NumSamples, qvm, qubits)
         print('The estimated density matrix is: \n',state_tomography_qpu.rho_est)
         state_tomography_qpu.plot()
         state_fidelity = state_tomography_qpu.fidelity(
-                state_tomography(Program,NumSamples,qvm,qubits))
+                state_tomography_qvm.rho_est)
         print('The estimated state fidelity is:', state_fidelity)
     plt.show()
 
@@ -48,7 +51,7 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
     """Inputs:
                 Program = The program/circuit 
                 NumSamples = Number of Samples in tomography
-                qubits = qubit(s) to perform tomgraphy on
+                qubits = qubit(s) to perform tomgraphy on, as a list
                 QVMorQPU = 0 or 1 to decide which device to run on
         Outputs:
                 Array and graph showing the tomography
@@ -62,8 +65,16 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
     if(QVMorQPU == 1):
         process_tomography_qpu, _, _ = do_process_tomography(
                 Program, NumSamples, qvm, qubits)
+        process_tomography_qvm, _, _ = do_process_tomography(
+                Program, NumSamples, qvm, qubits)        
         process_tomography_qpu.plot()
         process_fidelity = process_tomography_qpu.avg_gate_fidelity(
                 process_tomography_qvm.r_est)
         print('The estimate process fidelity is:', process_fidelity)        
     plt.show()
+    
+"""
+prog= Program([CNOT(0,7)])
+state_tomography(prog,10000,[0],1)
+state_tomography(prog,10000,[7],1)
+"""
