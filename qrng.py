@@ -110,7 +110,13 @@ def correctphas(prog,q1,q2,q3,a1,a2):
 def correctbit(prog,q1,q2,q3,a1,a2):
     zpar(prog,q1,q2,a1)
     zpar(prog,q2,q3,a2)
-    return prog.inst(CCNOT(a1,a2,q2),X(a2),CCNOT(a1,a2,q1),X(a2),X(a1),CCNOT(a1,a2,q3),X(a1))
+    return prog.inst(CCNOT(a1,a2,q2),
+                     X(a2),
+                     CCNOT(a1,a2,q1),
+                     X(a2),
+                     X(a1),
+                     CCNOT(a1,a2,q3),
+                     X(a1))
 # #
 # #
 def encphas(prog,q1,i,j): #takes single qubit, specify which ancillas to use

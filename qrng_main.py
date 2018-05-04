@@ -13,7 +13,7 @@ from quality_testing import monobit_test,within_block_test
 def main():
     #---Constants---#
     n_qubits = 19
-    n_samples = 1000 # 1000
+    n_samples = 1 # 1000
     indices = all_qubit_indices()
     indices = indices[0:n_qubits-1]
     info_str = date_str()
@@ -30,9 +30,9 @@ def main():
 
     #---Random number generation---#
     qrng_p = quil_qrng_txt(n_qubits,p)
-    a_number = sample_int(n_qubits,p,qvm,indices)
+    a_number = sample_int(n_qubits,p,qpu,indices)
     print(a_number)
-    numbers = sample_int(n_qubits,p,qvm,indices,n_samples)
+    numbers = sample_int(n_qubits,p,qpu,indices,n_samples)
     print(numbers)
     # numbers_2 = sample_int_compiled(n_qubits,p,qvm,compiler,indices,n_samples)
     # print(numbers_2)
