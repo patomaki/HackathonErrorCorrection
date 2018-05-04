@@ -70,7 +70,7 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
         process_tomography_qpu.plot()
         process_fidelity = process_tomography_qpu.avg_gate_fidelity(
                 process_tomography_qvm.r_est)
-        print('The estimate process fidelity is:', process_fidelity)        
+        print('The estimate process fidelity is:', process_fidelity)
     plt.show()
     
 """
