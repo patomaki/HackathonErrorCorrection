@@ -4,50 +4,79 @@ import numpy as np
 
 #-----Function definitions-----#
 
+def apply_CCCNOT(c1,c2,c3,t,p):
+    '''
+    Represent CCCNOT in terms of one- and two-qubit gates
+    From identities in Barenco et al. "Elementary gates 
+    for quantum computation"
+    Input c1,c2,c3: control qubit indices
+          t: target index
+          p: pyquil program object
+    '''
+    # V = X, CV = CNOT
+    new_p = p
+    new_p.inst(CNOT(c1,t))
+    new_p.inst(CNOT(c1,c2))
+    new_p.inst(CNOT(c2,t))
+    new_p.inst(CNOT(c1,c2))
+    new_p.inst(CNOT(c2,t))
+    new_p.inst(CNOT(c2,c3))
+    new_p.inst(CNOT(c3,t))
+    new_p.inst(CNOT(c1,c3))
+    new_p.inst(CNOT(c3,t))
+    new_p.inst(CNOT(c2,c3))
+    new_p.inst(CNOT(c3,t))
+    new_p.inst(CNOT(c1,c3))
+    new_p.inst(CNOT(c3,t))
+    return new_p
+# #
+# #
 def def_CCCNOT(p):
     '''
-        Define a triple control not gate to program p
+    Define a triple control not gate to program p
     '''
     CCCNOT = np.array([[1.,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,1.,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,1.,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,1.,0,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,1.,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,1.,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,1.,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,1.,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,1.,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,1.,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,1.,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,0,1.,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,0,0,1.,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,0,0,0,1.,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.],
-                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.,0]])
+                       [0,1.,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,1.,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,1.,0,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,1.,0,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,1.,0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,1.,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,1.,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,1.,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,1.,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,1.,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,1.,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,1.,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,1.,0,0],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.],
+                       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.,0]])
     p.defgate("CCCNOT",CCCNOT)
-
+# #
+# #
 def def_CCCZ(p):
     '''
-        Define a triple control not gate to program p
+    Define a triple control not gate to program p
     '''
     CCCZ = np.array([[1.,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,1.,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,1.,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,1.,0,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,1.,0,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,1.,0,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,1.,0,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,1.,0,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,1.,0,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,1.,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,1.,0,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,0,1.,0,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,0,0,1.,0,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,0,0,0,1.,0,0],
-                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.,0],
-                   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1.]])
+                     [0,1.,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                     [0,0,1.,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                     [0,0,0,1.,0,0,0,0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,1.,0,0,0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,1.,0,0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,1.,0,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,1.,0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,1.,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0,1.,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0,0,1.,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0,0,0,1.,0,0,0,0],
+                     [0,0,0,0,0,0,0,0,0,0,0,0,1.,0,0,0],
+                     [0,0,0,0,0,0,0,0,0,0,0,0,0,1.,0,0],
+                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.,0],
+                     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1.]])
     p.defgate("CCCZ",CCCZ)
-
+# #
+# #
 def encode_steane_code_qubit(code_indices,data_q_index,p):
     '''
     Append p with Steane code encoding circuit for qubits
@@ -155,7 +184,6 @@ def syndrome_circuit(ancilla_indices,code_indices,p):
                 CNOT(ancilla_indices[1],code_indices[2])])
     syn_p.inst([CNOT(ancilla_indices[1],code_indices[5]),
                 CNOT(ancilla_indices[1],code_indices[6])])
-    #syn_p.inst([CNOT(ancilla_indices[2],q) for q in range(len(code_indices)) if q%2==0])
     syn_p.inst([CNOT(ancilla_indices[2],code_indices[0]),
                 CNOT(ancilla_indices[2],code_indices[2])])
     syn_p.inst([CNOT(ancilla_indices[2],code_indices[4]),
@@ -167,7 +195,6 @@ def syndrome_circuit(ancilla_indices,code_indices,p):
                 CZ(ancilla_indices[4],code_indices[2])])
     syn_p.inst([CZ(ancilla_indices[4],code_indices[5]),
                 CZ(ancilla_indices[4],code_indices[6])])
-    #syn_p.inst([CZ(ancilla_indices[5],q) for q in range(len(code_indices)) if q%2==0])
     syn_p.inst([CZ(ancilla_indices[5],code_indices[0]),
                 CZ(ancilla_indices[5],code_indices[2])])
     syn_p.inst([CZ(ancilla_indices[5],code_indices[4]),
@@ -180,7 +207,6 @@ def conditional_error_correction(ancilla_indices,code_indices,p):
     '''
     '''
     new_p = p
-
     # 1-qubit X-errors
     #new_p.inst(CNOT(ancilla_indices[3],code_indices[3]))
     #new_p.inst(CNOT(ancilla_indices[4],code_indices[1]))
@@ -204,7 +230,6 @@ def conditional_error_correction(ancilla_indices,code_indices,p):
     new_p.inst(X(ancilla_indices[0]),X(ancilla_indices[1]),("CCCZ",ancilla_indices[0],ancilla_indices[1],ancilla_indices[2],code_indices[0]),X(ancilla_indices[0]),X(ancilla_indices[1]))
     new_p.inst(X(ancilla_indices[0]),X(ancilla_indices[2]),("CCCZ",ancilla_indices[0],ancilla_indices[1],ancilla_indices[2],code_indices[1]),X(ancilla_indices[0]),X(ancilla_indices[2]))
     new_p.inst(X(ancilla_indices[1]),X(ancilla_indices[2]),("CCCZ",ancilla_indices[0],ancilla_indices[1],ancilla_indices[2],code_indices[3]),X(ancilla_indices[1]),X(ancilla_indices[2]))
-    
     return new_p
 
 
