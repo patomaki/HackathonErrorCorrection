@@ -1,4 +1,4 @@
-from pyquil.gates import H,CNOT,X,Z,CZ
+from pyquil.gates import H,CNOT,X,Z,CZ,SWAP
 
 #-----Function definitions-----#
 def encode_steane_code_qubit(code_indices,data_q_index,p):
@@ -47,7 +47,7 @@ def decode_steane_code_qubit(code_indices,data_q_index,p):
     return dec_p
 # #
 # #
-def logical_X(code_indices,p):
+def steane_logical_X(code_indices,p):
     '''
     Steane code logical X
     '''
@@ -56,7 +56,7 @@ def logical_X(code_indices,p):
     return new_p
 # #
 # #
-def logical_Z(code_indices,p):
+def steane_logical_Z(code_indices,p):
     '''
     Steane code logical Z
     '''
@@ -65,12 +65,15 @@ def logical_Z(code_indices,p):
     return new_p
 # #
 # #
-def logical_H(code_indices,p):
+def steane_logical_H(code_indices,p):
     '''
     Steane code logical H
     '''
     new_p = p
     new_p.inst([H(q) for q in code_indices])
+    # new_p.inst(SWAP(code_indices[0],code_indices[2]))
+    # new_p.inst(SWAP(code_indices[1],code_indices[0]))
+    # new_p.inst(SWAP(code_indices[3],code_indices[4]))
     return new_p
 # #
 # #

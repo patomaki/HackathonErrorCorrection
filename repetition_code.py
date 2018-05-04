@@ -1,3 +1,4 @@
+import numpy as np
 from pyquil.gates import H,CNOT,X,Z,CZ
 #-----Function definitions-----#
 def encode_repetition_code_qubit(code_indices,data_q_index,p):
@@ -23,19 +24,46 @@ def decode_repetition_code_qubit(code_indices,data_q_index,p):
     return dec_p
 # #
 # #
-def repetition_logical_Z(p):
+def repetition_logical_Z(code_indices,p):
     '''
     '''
     new_p = p
-    new_p.inst(Z(code_indices[0]))
+    new_p.inst([Z(q) for q in code_indices])
     return new_p
 # #
 # #
-def repetition_logical_X(p):
+def repetition_logical_X(code_indices,p):
     '''
     '''
     new_p = p
     new_p.inst([X(q) for q in code_indices])
+    return new_p
+# #
+# #
+def define_repetition_logical_H(p):
+    '''
+    Logical hadamard in repetition code
+    '''
+    Hbar = 1.0/np.sqrt(2)*np.array([[1,0,0,0,0,0,0,1],
+                                    [0,1,0,0,0,0,1,0],
+                                    [0,0,1,0,0,1,0,0],
+                                    [0,0,0,1,1,0,0,0],
+                                    [0,0,0,1,-1,0,0,0],
+                                    [0,0,1,0,0,-1,0,0],
+                                    [0,1,0,0,0,0,-1,0],
+                                    [1,0,0,0,0,0,0,-1]])
+    p.defgate("Hbar",Hbar)
+# #
+# #
+def repetition_logical_H(code_indices,data_q_index,p):
+    '''
+    Non-fault tolerant logical Hadamard in repetition code
+    '''
+    new_p = p
+    p = decode_repetition_code_qubit(code_indices,data_q_index,p)
+    p.inst(H(code_indices[0]))
+    p.inst(CNOT(code_indices[0],code_indices[1]))
+    p.inst(CNOT(code_indices[0],code_indices[2]))
     return new_p
 # #
 # #
@@ -59,7 +87,7 @@ def decode_phase_correction_code_qubit(code_indices,data_q_index,p):
     return dec_p
 # #
 # #
-def phase_logical_Z(p):
+def phase_logical_Z(code_indices,p):
     '''
     '''
     new_p = p
@@ -67,7 +95,7 @@ def phase_logical_Z(p):
     return new_p
 # #
 # #
-def phse_logical_X(p):
+def phse_logical_X(code_indices,p):
    '''
    '''
    new_p = p
