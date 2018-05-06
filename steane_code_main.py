@@ -12,6 +12,19 @@ def main():
     # acorn = get_devices(as_dict=True)['19Q-Acorn']
     # qvm = QVMConnection(acorn)  #QVM with QPU noise
     p = Program()
+    p.inst(X(code_indices[0]))
+    p.inst(X(code_indices[1]))
+    p.inst(X(code_indices[2]))
+    p.inst(X(code_indices[3]))
+
+    p = apply_CCCNOT(code_indices[0],
+                     code_indices[1],
+                     code_indices[2],
+                     code_indices[3],
+                     p)
+    ket_results = qvm.wavefunction(p)
+    print('state after CCCNOT')
+    print(ket_results)
     def_CCCNOT(p)
     def_CCCZ(p)
     p.inst(X(0))

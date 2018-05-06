@@ -1,9 +1,70 @@
-from pyquil.gates import H,CNOT,X,Z,CZ,SWAP
-from pyquil.gates import H,CNOT,X,Z,CZ,CCNOT
+from pyquil.gates import H,CNOT,X,Z,CZ,CCNOT,RY,RZ,PHASE
 import numpy as np
 
 #-----Function definitions-----#
 
+def define_SQRTX(p):
+    '''
+    '''
+    SQRTX = 1.0/2.0*np.array([[1+1.j,1-1.j],
+                              [1-1.j,1+1.j]])
+    p.defgate("SQRTX",SQRTX)
+# #
+# #
+def apply_CSQRTSQRTX(c,t,p):
+    '''
+    Decomposition of Controlled-Sqrt(Sqrt(X)) gate.
+    '''
+    new_p = p
+    alpha = np.pi/4
+    theta = -np.pi/8
+    beta = -np.pi/4
+    # rigetti convention: RY(-theta) = [[Cos(theta),-Sin(theta)],
+    #                                   [Sin(theta), Cos(theta)]]
+    new_p.inst(RZ(alpha-beta,t)) # C
+    new_p.inst(CNOT(c,t))
+    new_p.inst(RY(theta,t)) # B
+    new_p.inst(CNOT(c,t))
+    new_p.inst(RY(-theta,t))   # A
+    new_p.inst(RZ(-2*alpha,t)) # A
+    new_p.inst(PHASE(np.pi/8.0,c)) # gate ok
+    return new_p
+# #
+# #
+def apply_CSQRTSQRTXDagger(c,t,p):
+    '''
+    Decomposition of Controlled-(Sqrt(Sqrt(X)))^dagger gate.
+    '''
+    new_p = p
+    alpha = np.pi/4
+    theta = np.pi/8
+    beta = -np.pi/4
+    # rigetti convention: RY(-theta) = [[Cos(theta),-Sin(theta)],
+    #                                   [Sin(theta), Cos(theta)]]
+    new_p.inst(RZ(alpha-beta,t)) # C
+    new_p.inst(CNOT(c,t))
+    new_p.inst(RY(theta,t)) # B
+    new_p.inst(CNOT(c,t))
+    new_p.inst(RY(-theta,t))   # A
+    new_p.inst(RZ(-2*alpha,t)) # A
+    new_p.inst(PHASE(-np.pi/8.0,c)) # gate ok
+    return new_p
+# #
+# #
+def apply_CCNOT(c1,c2,t,p):
+    '''
+    '''
+    new_p = p
+    new_p.inst(RY(np.pi/4,t))
+    new_p.inst(CNOT(c2,t))
+    new_p.inst(RY(np.pi/4,t))
+    new_p.inst(CNOT(c1,t))
+    new_p.inst(RY(-np.pi/4,t))
+    new_p.inst(CNOT(c2,t))
+    new_p.inst(RY(-np.pi/4,t))
+    return new_p
+# #
+# #
 def apply_CCCNOT(c1,c2,c3,t,p):
     '''
     Represent CCCNOT in terms of one- and two-qubit gates
@@ -13,21 +74,21 @@ def apply_CCCNOT(c1,c2,c3,t,p):
           t: target index
           p: pyquil program object
     '''
-    # V = X, CV = CNOT
+    # V^4 = X -> V = sqrt(sqrt(X))
     new_p = p
-    new_p.inst(CNOT(c1,t))
-    new_p.inst(CNOT(c1,c2))
-    new_p.inst(CNOT(c2,t))
-    new_p.inst(CNOT(c1,c2))
-    new_p.inst(CNOT(c2,t))
-    new_p.inst(CNOT(c2,c3))
-    new_p.inst(CNOT(c3,t))
+    new_p = apply_CSQRTSQRTX(c3,t,new_p)
     new_p.inst(CNOT(c1,c3))
-    new_p.inst(CNOT(c3,t))
+    new_p = apply_CSQRTSQRTXDagger(c3,t,new_p)
     new_p.inst(CNOT(c2,c3))
-    new_p.inst(CNOT(c3,t))
+    new_p = apply_CSQRTSQRTX(c3,t,new_p)
     new_p.inst(CNOT(c1,c3))
-    new_p.inst(CNOT(c3,t))
+    new_p = apply_CSQRTSQRTXDagger(c3,t,new_p)
+    new_p.inst(CNOT(c2,c3))
+    new_p = apply_CSQRTSQRTX(c2,t,new_p)
+    new_p.inst(CNOT(c1,c2))
+    new_p = apply_CSQRTSQRTXDagger(c2,t,new_p)
+    new_p.inst(CNOT(c1,c2))
+    new_p = apply_CSQRTSQRTX(c1,t,new_p)
     return new_p
 # #
 # #
