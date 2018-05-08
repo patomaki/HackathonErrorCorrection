@@ -27,7 +27,9 @@ def state_tomography(Program, NumSamples, qubits, QVMorQPU):
                 QVMorQPU = 0 or 1 to decide which device to run on
         Outputs:
                 Array and graph showing the tomography
-                Estimate of fidelity compared to perfect/noiseless case               
+                Estimate of fidelity compared to perfect/noiseless case 
+        Suggestion: 
+                    Use NumSamples = 1000
     """
     if(QVMorQPU == 0):
         state_tomography_qvm, _, _ = do_state_tomography(
@@ -39,7 +41,7 @@ def state_tomography(Program, NumSamples, qubits, QVMorQPU):
         state_tomography_qpu, _, _ = do_state_tomography(
                 Program, NumSamples, qpu, qubits)
         state_tomography_qvm, _, _ = do_state_tomography(
-                Program, NumSamples, qvm, qubits)
+                Program, 2000, qvm, qubits)
         print('The estimated density matrix is: \n',state_tomography_qpu.rho_est)
         state_tomography_qpu.plot()
         state_fidelity = state_tomography_qpu.fidelity(
@@ -55,7 +57,10 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
                 QVMorQPU = 0 or 1 to decide which device to run on
         Outputs:
                 Array and graph showing the tomography
-                Estimate of fidelity compared to perfect/noiseless case               
+                Estimate of fidelity compared to perfect/noiseless case 
+                
+        Suggestion: 
+                    Use NumSamples = 500
     """
     if(QVMorQPU == 0):
         process_tomography_qvm, _, _ = do_process_tomography(
@@ -63,17 +68,22 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
         process_tomography_qvm.plot()
         
     if(QVMorQPU == 1):
-        process_tomography_qpu, _, _ = do_process_tomography(
-                Program, NumSamples, qpu, qubits)
         process_tomography_qvm, _, _ = do_process_tomography(
-                Program, NumSamples, qvm, qubits)        
+                Program, 1000, qvm, qubits)
+        process_tomography_qpu, _, _ = do_process_tomography(
+                Program, NumSamples, qpu, qubits)     
         process_tomography_qpu.plot()
-        process_fidelity = process_tomography_qpu.avg_gate_fidelity(
+        print('Chi matrix:', process_tomography_qpu.to_chi())
+        process_fidelity = process_tomography_qpu.process_fidelity(
+                process_tomography_qvm.r_est)
+        gate_fidelity = process_tomography_qpu.avg_gate_fidelity(
                 process_tomography_qvm.r_est)
         print('The estimate process fidelity is:', process_fidelity)
+        print('The estimate gate fidelity is:', gate_fidelity)
     plt.show()
     
 """
-prog= Program([H(5),X(5),H(5),Z(5),H(5)])
-#state_tomography(prog,500,[0,12],1)
-process_tomography(prog,2000,[5],1)"""
+prog= Program([H(0), X(0), Z(0), X(0), H(0)])
+state_tomography(prog,1000,[0],1)
+process_tomography(prog,500,[0],1)
+"""
