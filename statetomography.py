@@ -64,7 +64,7 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
         
     if(QVMorQPU == 1):
         process_tomography_qpu, _, _ = do_process_tomography(
-                Program, NumSamples, qvm, qubits)
+                Program, NumSamples, qpu, qubits)
         process_tomography_qvm, _, _ = do_process_tomography(
                 Program, NumSamples, qvm, qubits)        
         process_tomography_qpu.plot()
