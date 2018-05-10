@@ -66,8 +66,15 @@ def measure_T1(qubit, acorn):
     plt.show()
     plt.savefig("T1_times.pdf")
 
+def measure_T2(qubit, acorn):
+
+    qpu = QPUConnection(acorn)
+
+    populations = []
+
+    
 
 if __name__ == "__main__":
 
     acorn = get_devices(as_dict=True)["19Q-Acorn"]
-    measure_T1(0,acorn)
+    measure_T1(1,acorn)
