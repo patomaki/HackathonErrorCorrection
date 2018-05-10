@@ -1,0 +1,5 @@
+# Steane Logical Hadamard (encoding, Hbar, decoding) state tomography I,X,Y,Z
+9.800000000000000377e-02
+-2.340000000000000135e-01
+-2.839999999999999747e-01
+-2.379999999999999893e-01
