@@ -115,31 +115,33 @@ def main():
     data_q_index    = 1
     ancilla_indices = [6,10,5,0]
     additional_ancilla_index = 16
-    n_runs = 10000
+    n_runs = 1000
     info_str = date_str()
     info_str += '_nruns_' + str(n_runs)
-    name_str = 'qvmn_state_tomo_data_q_'+str(data_q_index)
+    name_str = 'qpu_state_tomo_data_q_'+str(data_q_index)
     
     print('Number of runs: ',n_runs)
     acorn = get_devices(as_dict=True)['19Q-Acorn']
-    qvm = QVMConnection(acorn)
+    # qvm = QVMConnection(acorn)
     # qvm = QVMConnection()
+    qpu = QPUConnection(acorn)
+    qhardware = qpu
     
     # Physical Hadamard
     p = Program()
     Initial_Pauli = H
     p = initialize_state(code_index,Initial_Pauli,p)
     trrho = one_qubit_state_tomography(p,
-                                       qvm,
+                                       qhardware,
                                        n_runs,
                                        code_index,
                                        ancilla_index)
     header_str = 'Physical Hadamard state tomography I,X,Y,Z'
     print(header_str)
-    print(np.array(trrho)/2.0)
+    print(np.array(trrho))
     
-    save_np_data(np.array(trrho)/2.0,
-                 'data_9_5/',
+    save_np_data(np.array(trrho),
+                 'data_10_5/',
                  name_str+'_physical_H_'+info_str,
                  header_str)
 
@@ -149,16 +151,16 @@ def main():
     p = steane_logical_H(code_indices,p)
     p = decode_steane_code_qubit(code_indices,data_q_index,p)
     trrho = one_qubit_state_tomography(p,
-                                       qvm,
+                                       qhardware,
                                        n_runs,
                                        data_q_index,
                                        ancilla_indices[0])
-    header_str = 'Steane Logical Hadamard (encoding, Hbar, decoding) state tomography I,X,Y,Z'
+    header_str = 'Steane H(encoding,H,decoding) state tomography I,X,Y,Z'
     print(header_str)
-    print(np.array(trrho)/2.0)
-    save_np_data(np.array(trrho)/2.0,
-                 'data_9_5/',
-                 name_str+'_Steane_H_'+info_str,
+    print(np.array(trrho))
+    save_np_data(np.array(trrho),
+                 'data_10_5/',
+                 name_str+'_Steane_encode_'+info_str,
                  header_str)
     print('Everything went better than expected!')
 

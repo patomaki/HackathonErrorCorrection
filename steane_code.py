@@ -1,8 +1,7 @@
-from pyquil.gates import H,CNOT,X,Z,CZ,CCNOT,RY,RZ,PHASE
+from pyquil.gates import I,X,Y,Z,H,RZ,RY,PHASE,CZ,CNOT,CCNOT,MEASURE
 import numpy as np
 
 #-----Function definitions-----#
-
 def define_SQRTX(p):
     '''
     '''
