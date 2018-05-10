@@ -88,10 +88,11 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
                 process_tomography_qvm.r_est)
         print('The estimate process fidelity is:', process_fidelity)
         print('The estimate gate fidelity is:', gate_fidelity)
+        
     plt.show()
     
-
-prog= Program([H(0)])
+"""
+prog= Program([CNOT(12,17)])
 prog = compile_INIT_gate(prog)
 #state_tomography(prog,1000,[0],1)
-process_tomography(prog,2000,[0],1)
+process_tomography(prog,5000,[12,17],1)"""
