@@ -15,7 +15,7 @@ def physical_H_induced_rns(qhardware,data_q_index,n_runs):
     info_str = date_str()
     info_str += '_nruns_' + str(n_runs)
     name_str = 'qpu_rn_data_q_'+str(data_q_index)
-    header_str = 'Physical H-induced random numbers on qvmn. '
+    header_str = 'Physical H-induced random numbers on qpu. '
     header_str += 'data_q_index = '+str(data_q_index)
     print('header:')
     print(header_str)
@@ -35,7 +35,7 @@ def steane_H_induced_rns(qhardware,code_indices,data_q_index,n_runs):
     info_str = date_str()
     info_str += '_nruns_' + str(n_runs)
     name_str = 'qpu_rn_data_q_'+str(data_q_index)
-    header_str = 'Steane Hbar-induced random numbers on qvmn.'
+    header_str = 'Steane Hbar-induced random numbers on qpu.'
     header_str += ('code_indices = '+str(code_indices)
                   +', data_q_index = '+str(data_q_index))
     print('header:')
@@ -56,9 +56,9 @@ def steane_H_induced_rns(qhardware,code_indices,data_q_index,n_runs):
 def main():
     print('Generating Hadamard-induced random numbers...')
     #---Constants---#
-    code_indices    = [1,7,12,17,11,6,16]
-    data_q_index    = 1
-    ancilla_indices = [6,10,5,0]
+    code_indices    = [11,16,6,1,17,12,10]
+    data_q_index    = 11
+    ancilla_indices = [7]
     n_runs = 10000
     print('Number of runs: ',n_runs)
     acorn = get_devices(as_dict=True)['19Q-Acorn']
@@ -68,7 +68,7 @@ def main():
     qhardware = qpu
     
     physical_H_induced_rns(qhardware,data_q_index,n_runs)
-    # steane_H_induced_rns(qhardware,code_indices,data_q_index,n_runs)
+    steane_H_induced_rns(qhardware,code_indices,data_q_index,n_runs)
 
 # Testing section
 #    p.inst(X(code_indices[0]))

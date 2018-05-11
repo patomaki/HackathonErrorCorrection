@@ -125,7 +125,7 @@ def main():
     code_indices    = [11,16,6,1,17,12,10]#= [1,7,12,17,11,6,16]
     data_q_index    = 11
     ancilla_indices = [7]
-    additional_ancilla_index = 16
+    additional_ancilla_index = 5
     n_runs = 1000
     info_str = date_str()
     info_str += '_nruns_' + str(n_runs)
@@ -133,10 +133,10 @@ def main():
     
     print('Number of runs: ',n_runs)
     acorn = get_devices(as_dict=True)['19Q-Acorn']
-    qvm = QVMConnection(acorn)
+    # qvmn = QVMConnection(acorn)
     # qvm = QVMConnection()
-    # qpu = QPUConnection(acorn)
-    qhardware = qvm
+    qpu = QPUConnection(acorn)
+    qhardware = qvmn
     
     # Physical Hadamard
     p = Program()
