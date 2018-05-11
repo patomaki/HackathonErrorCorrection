@@ -24,9 +24,9 @@ def initialize_in_1(qubit):
 
 def add_identities(p, qubit, num_identities):
 
-    set_trace()
+    #set_trace()
     p.inst(Pragma("PRESERVE_BLOCK"))
-    p.inst((I(qubit),)*num_identities)
+    p.inst([I(qubit)]*num_identities)
     p.inst(Pragma("END_PRESERVE_BLOCK"))
 
     return p
@@ -52,7 +52,7 @@ def measure_T1(qubit, acorn, QPUFlag=False):
 
     populations = []
 
-    for num_identities in range(1, 1000):
+    for num_identities in range(1, 250, 25):
         print("Num identities = {}".format(num_identities))
 
         p = initialize_in_1(qubit)
@@ -60,22 +60,25 @@ def measure_T1(qubit, acorn, QPUFlag=False):
         p = compile_program(p, acorn)
 
         if QPUFlag:
-            state_tomography_qpu, _, _ = do_state_tomography(p, 1000, qpu, [qubit]) 
+            state_tomography_qpu, _, _ = do_state_tomography(p, 250, qpu, [qubit]) 
             rho = state_tomography_qpu.rho_est
         else:
-            state_tomography_qvm, _, _ = do_state_tomography(p, 1000, qvm, [qubit]) 
+            state_tomography_qvm, _, _ = do_state_tomography(p, 250, qvm, [qubit]) 
             rho = state_tomography_qvm.rho_est
 
-        excited_population = rho[1,1]
+        excited_population = np.real(rho[1,1])
+        if excited_population < 0.001: # Truncate at 0.001 to avoid spurious negative populations
+            excited_population = 0.001
         populations.append(excited_population)
 
     logged_populations = np.log(populations)
-    times = range(1, 1000)
+    times = range(1, 500, 50)
+    set_trace()
     popt, pcov = curve_fit(straight_line, times, logged_populations)
     m, c = popt
     T1 = -1/m
 
-    plt.semilogy(times, logged_populations, label = "Data")
+    plt.semilogy(times, populations, label = "Data")
     plt.semilogy(times, np.exp(m*logged_populations + c), label = "Fit: T1 = {}".format(T1))
     plt.xlabel("Time (arbitrary units)")
     plt.ylabel("Excited population")
@@ -95,4 +98,4 @@ def measure_T2(qubit, acorn):
 if __name__ == "__main__":
 
     acorn = get_devices(as_dict=True)["19Q-Acorn"]
-    measure_T1(1, acorn, False)
+    measure_T1(1, acorn, True)
