@@ -77,7 +77,7 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
         
     if(QVMorQPU == 1):
         process_tomography_qvm, _, _ = do_process_tomography(
-                Program, 5000, qvm, qubits)
+                Program, 4000, qvm, qubits)
         process_tomography_qpu, _, _ = do_process_tomography(
                 Program, NumSamples, qpu, qubits)     
         process_tomography_qpu.plot()
@@ -92,7 +92,7 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
     plt.show()
     
 
-prog= Program([CNOT(11,6)])
+prog= Program([SWAP(11,6)])
 prog = compile_INIT_gate(prog)
 #state_tomography(prog,1000,[0],1)
-process_tomography(prog,5000,[11,6],1)
+process_tomography(prog,3000,[11,6],1)
