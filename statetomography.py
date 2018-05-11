@@ -91,8 +91,8 @@ def process_tomography(Program, NumSamples, qubits, QVMorQPU):
         
     plt.show()
     
-"""
-prog= Program([CNOT(12,17)])
+
+prog= Program([CNOT(11,6)])
 prog = compile_INIT_gate(prog)
 #state_tomography(prog,1000,[0],1)
-process_tomography(prog,5000,[12,17],1)"""
+process_tomography(prog,5000,[11,6],1)
