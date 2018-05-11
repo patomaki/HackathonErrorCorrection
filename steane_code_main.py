@@ -15,7 +15,7 @@ def physical_H_induced_rns(qhardware,data_q_index,n_runs):
     info_str = date_str()
     info_str += '_nruns_' + str(n_runs)
     name_str = 'qpu_rn_data_q_'+str(data_q_index)
-    header_str = 'Physical H-induced random numbers on qpu. '
+    header_str = 'Physical H-induced random numbers on qvmn. '
     header_str += 'data_q_index = '+str(data_q_index)
     print('header:')
     print(header_str)
@@ -24,7 +24,7 @@ def physical_H_induced_rns(qhardware,data_q_index,n_runs):
     p.inst(MEASURE(data_q_index,data_q_index))
     run_results = qhardware.run(p,[data_q_index],n_runs)
     save_np_data(np.array(run_results),
-                 'data_10_5/',
+                 'data_11_5/',
                  name_str+'_physical_H_'+info_str,
                  header_str)
 # #
@@ -35,7 +35,7 @@ def steane_H_induced_rns(qhardware,code_indices,data_q_index,n_runs):
     info_str = date_str()
     info_str += '_nruns_' + str(n_runs)
     name_str = 'qpu_rn_data_q_'+str(data_q_index)
-    header_str = 'Steane Hbar-induced random numbers on qpu. '
+    header_str = 'Steane Hbar-induced random numbers on qvmn.'
     header_str += ('code_indices = '+str(code_indices)
                   +', data_q_index = '+str(data_q_index))
     print('header:')
@@ -47,7 +47,7 @@ def steane_H_induced_rns(qhardware,code_indices,data_q_index,n_runs):
     p.measure_all(*[(q,q) for q in code_indices])
     run_results = qhardware.run(p,code_indices,n_runs)
     save_np_data(np.array(run_results),
-                 'data_10_5/',
+                 'data_11_5/',
                  name_str+'_Steane_H_'+info_str,
                  header_str)
 # #
