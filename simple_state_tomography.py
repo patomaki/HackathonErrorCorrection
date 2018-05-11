@@ -15,6 +15,17 @@ def apply_CY(c,t,p):
     return new_p
 # #
 # #
+def apply_CmiY(c,t,p):
+    '''
+    Controlled -iY gate
+    '''
+    new_p = p
+    new_p.inst(RY(np.pi/2.0,t))
+    new_p.inst(CNOT(c,t))
+    new_p.inst(RY(-np.pi/2.0,t))
+    return new_p
+# #
+# #
 def initialize_state(code_index,Pauli,p):
     '''
     Initialize to a given state (here, ground state)
@@ -108,24 +119,24 @@ def one_qubit_state_tomography(initial_p,qvm,n_runs,code_index,ancilla_index):
 def main():
     print('Performing state tomography on a single qubit...')
     #---Constants---#
-    code_index    = 0
-    ancilla_index = 1
+    code_index    = 1
+    ancilla_index = 7
     # Indices for Steane code
-    code_indices    = [1,7,12,17,11,6,16]
-    data_q_index    = 1
-    ancilla_indices = [6,10,5,0]
+    code_indices    = [11,16,6,1,17,12,10]#= [1,7,12,17,11,6,16]
+    data_q_index    = 11
+    ancilla_indices = [7]
     additional_ancilla_index = 16
     n_runs = 1000
     info_str = date_str()
     info_str += '_nruns_' + str(n_runs)
-    name_str = 'qpu_state_tomo_data_q_'+str(data_q_index)
+    name_str = 'qvmn_state_tomo_data_q_'+str(data_q_index)
     
     print('Number of runs: ',n_runs)
     acorn = get_devices(as_dict=True)['19Q-Acorn']
-    # qvm = QVMConnection(acorn)
+    qvm = QVMConnection(acorn)
     # qvm = QVMConnection()
-    qpu = QPUConnection(acorn)
-    qhardware = qpu
+    # qpu = QPUConnection(acorn)
+    qhardware = qvm
     
     # Physical Hadamard
     p = Program()
@@ -136,12 +147,12 @@ def main():
                                        n_runs,
                                        code_index,
                                        ancilla_index)
-    header_str = 'Physical Hadamard state tomography I,X,Y,Z'
+    header_str = 'Physical Hadamard state tomography I,X,Y,Z, qs '+str(code_index)+','+str(ancilla_index)
     print(header_str)
     print(np.array(trrho))
     
     save_np_data(np.array(trrho),
-                 'data_10_5/',
+                 'data_11_5/',
                  name_str+'_physical_H_'+info_str,
                  header_str)
 
@@ -155,12 +166,12 @@ def main():
                                        n_runs,
                                        data_q_index,
                                        ancilla_indices[0])
-    header_str = 'Steane H(encoding,H,decoding) state tomography I,X,Y,Z'
+    header_str = 'Steane H (encoding,H,decoding) state tomography I,X,Y,Z qs '+str(code_indices)+','+str(ancilla_indices)
     print(header_str)
     print(np.array(trrho))
     save_np_data(np.array(trrho),
-                 'data_10_5/',
-                 name_str+'_Steane_encode_'+info_str,
+                 'data_11_5/',
+                 name_str+'_Steane_H_'+info_str,
                  header_str)
     print('Everything went better than expected!')
 
