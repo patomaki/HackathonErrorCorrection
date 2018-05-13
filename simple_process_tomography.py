@@ -36,7 +36,7 @@ def main():
     # Prepare |0><0|: (do nothing)
     p = Program()
     p.inst(I(data_q_index))
-    p.inst(H(data_q_index))
+    p.inst(X(data_q_index))
     trrho1 = one_qubit_state_tomography(p,qhardware,n_runs,data_q_index,ancilla_index)
     rho1 = (trrho1[0]*Id2 + trrho1[1]*sigmaX +
             trrho1[2]*sigmaY + trrho1[3]*sigmaZ)/2.0
@@ -44,7 +44,7 @@ def main():
     # Prepare |1><1|:
     p = Program()
     p.inst(X(data_q_index))
-    p.inst(H(data_q_index))
+    p.inst(X(data_q_index))
     trrho2 = one_qubit_state_tomography(p,qhardware,n_runs,data_q_index,ancilla_index)
     rho2 = (trrho2[0]*Id2 + trrho2[1]*sigmaX +
             trrho2[2]*sigmaY + trrho2[3]*sigmaZ)/2.0
@@ -52,7 +52,7 @@ def main():
     # Prepare |+><+|:
     p = Program()
     p.inst(H(data_q_index))
-    p.inst(H(data_q_index))
+    p.inst(X(data_q_index))
     trrho3 = one_qubit_state_tomography(p,qhardware,n_runs,data_q_index,ancilla_index)
     rho3 = (trrho3[0]*Id2 + trrho3[1]*sigmaX +
             trrho3[2]*sigmaY + trrho3[3]*sigmaZ)/2.0
@@ -61,7 +61,7 @@ def main():
     p = Program()
     p.inst(H(data_q_index))
     p.inst(PHASE(np.pi/2,data_q_index))
-    p.inst(H(data_q_index))
+    p.inst(X(data_q_index))
     trrho4 = one_qubit_state_tomography(p,qhardware,n_runs,data_q_index,ancilla_index)
     rho4 = (trrho4[0]*Id2 + trrho4[1]*sigmaX +
             trrho4[2]*sigmaY + trrho4[3]*sigmaZ)/2.0
@@ -78,7 +78,7 @@ def main():
                            trrho3,
                            trrho4]),
                  data_folder,
-                 name_str+'_H_raw'+info_str,
+                 name_str+'_X_raw'+info_str,
                  header_str)
     # rhoprime matrices rho1p, etc
     # follow the convention of N & C exactly
@@ -100,7 +100,7 @@ def main():
     print(header_str)
     save_np_data(chi,
                  data_folder,
-                 name_str+'_H_chi'+info_str,
+                 name_str+'_X_chi'+info_str,
                  header_str)
 # #
 # #
