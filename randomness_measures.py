@@ -134,8 +134,8 @@ def main():
     binary_matrix_rank_test(rands)
 
     print('Basic randomness tests on physical-H induced rns:')
-    file_name = 'data_9_5/qpu_rn_data_q_1_physical_H_2018-05-09__13-04-33_nruns_100000.txt'
-    #file_name = 'data_9_5/qpu_rn_data_q_1_physical_H_2018-05-09__13-03-10_nruns_10000.txt'
+    #file_name = 'data_9_5/qpu_rn_data_q_1_physical_H_2018-05-09__13-04-33_nruns_100000.txt'
+    file_name = 'data_9_5/qpu_rn_data_q_1_physical_H_2018-05-09__13-03-10_nruns_10000.txt'
     qpu_physical_H = np.loadtxt(file_name)
     monobit_test(qpu_physical_H)
     runs_test(qpu_physical_H)
